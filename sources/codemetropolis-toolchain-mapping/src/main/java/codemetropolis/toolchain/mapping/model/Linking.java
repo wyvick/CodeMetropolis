@@ -24,8 +24,8 @@ public class Linking {
     static {
         SUPPORTED_PROPERTIES.put(Type.FLOOR, new String[]{"width", "height", "length", "character", "external_character", "torches"});
         SUPPORTED_PROPERTIES.put(Type.CELLAR, new String[]{"width", "height", "length", "character", "external_character", "torches"});
-        SUPPORTED_PROPERTIES.put(Type.GARDEN, new String[]{"tree-ratio", "mushroom-ratio", "flower-ratio"});
-        SUPPORTED_PROPERTIES.put(Type.GROUND, new String[]{});
+        SUPPORTED_PROPERTIES.put(Type.GARDEN, new String[]{"tree-ratio", "mushroom-ratio", "flower-ratio", "pig" , "cow", "rabbit", "chicken", "sheep"});
+        SUPPORTED_PROPERTIES.put(Type.GROUND, new String[]{"biome-id"});
     }
 	
 	@XmlAttribute

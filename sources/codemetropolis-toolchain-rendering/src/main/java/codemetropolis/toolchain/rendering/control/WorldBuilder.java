@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 
+import codemetropolis.toolchain.rendering.model.primitive.Mob;
 import org.apache.commons.lang3.time.StopWatch;
 
-import codemetropolis.blockmodifier.World;
 import codemetropolis.toolchain.commons.cmxml.Buildable;
 import codemetropolis.toolchain.commons.cmxml.BuildableTree;
 import codemetropolis.toolchain.commons.cmxml.exceptions.CmxmlReaderException;
@@ -33,8 +33,43 @@ public class WorldBuilder {
 	private int count = 0;
 	private int total = 0;
 	
-	public WorldBuilder(String worldPath) {
-		world = new World(worldPath, GROUND_LEVEL);
+	public WorldBuilder(String worldPath, String inputPath) {
+		BuildableTree buildables = new BuildableTree();
+		try {
+			buildables.loadFromFile(inputPath);
+		} catch (CmxmlReaderException e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		List<Ground> grounds = new ArrayList<Ground>();
+		int biomeID=1;
+		boolean hasMob = false;
+		for(Buildable b : buildables.getBuildables()) {
+			switch (b.getType()) {
+				case GROUND:
+					if (b.hasAttribute("biome-id")) {
+						if(Integer.parseInt(b.getAttributeValue("biome-id"))>-1 && Integer.parseInt(b.getAttributeValue("biome-id"))<40){
+							biomeID = Integer.parseInt(b.getAttributeValue("biome-id"));
+						}else{
+							try {
+								throw new NBTException("Biome ID must be between 0 and 39");
+							} catch (NBTException e) {
+									e.printStackTrace();
+							}
+						}
+					}
+					break;
+				case GARDEN:
+					if(b.hasAttribute("pig")){
+						hasMob = true;
+					}
+					break;
+			}
+			
+		
+		}
+		world = new World(worldPath, GROUND_LEVEL, (byte)biomeID, hasMob);
 	}
 	
 	public void createBuildings(String inputPath) throws BuildingTypeMismatchException{
